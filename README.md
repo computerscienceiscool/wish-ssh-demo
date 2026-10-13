@@ -50,6 +50,9 @@ The screen uses Lip Gloss styles—color, rounded borders, headings, and a key
 badge—to make that distinction visible. These are presentation choices; Wish's
 substantive capability is serving the application over SSH.
 
+The demo requests true-color terminal output, so its colored interface needs a
+client terminal with true-color support.
+
 This demonstration does not provide production authentication, account
 management, relay hosting, or collaboration. It is not a replacement for the
 TUIOS relay work.

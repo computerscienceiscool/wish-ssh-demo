@@ -12,6 +12,7 @@ import (
 	"github.com/charmbracelet/ssh"
 	"github.com/charmbracelet/wish"
 	"github.com/charmbracelet/wish/bubbletea"
+	"github.com/muesli/termenv"
 )
 
 var (
@@ -102,9 +103,12 @@ func main() {
 		wish.WithAddress(*address),
 		wish.WithHostKeyPath(*hostKey),
 		wish.WithMiddleware(
-			bubbletea.Middleware(func(sess ssh.Session) (tea.Model, []tea.ProgramOption) {
-				return model{visitor: sess.User()}, []tea.ProgramOption{tea.WithAltScreen()}
-			}),
+			bubbletea.MiddlewareWithColorProfile(
+				func(sess ssh.Session) (tea.Model, []tea.ProgramOption) {
+					return model{visitor: sess.User()}, []tea.ProgramOption{tea.WithAltScreen()}
+				},
+				termenv.TrueColor,
+			),
 		),
 	)
 	if err != nil {
