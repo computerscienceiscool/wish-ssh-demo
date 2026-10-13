@@ -22,12 +22,33 @@ remove the resulting known-host entry when finished.
 
 Press `q` in the app to exit.
 
+## How the two terminal windows work
+
+The server window runs this Go program. It opens a small SSH server that is
+bound to `127.0.0.1`, which means it accepts connections only from this same
+computer. The client window uses ordinary `ssh` to connect to that local
+address.
+
+Instead of giving the client a shell prompt, the server starts a Bubble Tea
+application for that connection. The application controls the screen, receives
+key presses such as `q`, and is notified if the client terminal is resized.
+
+```text
+SSH client window → local SSH connection → Wish server → Bubble Tea screen
+```
+
+No connection passes through Vesta or the internet in the default setup.
+
 ## What this demonstrates
 
 Ordinary SSH provides a remote login and a PTY. Wish embeds an SSH server in a
 Go process and gives each connection its own Bubble Tea program, including
 terminal-resize events. It is useful when the server should provide a specific
 terminal application rather than a general-purpose shell.
+
+The screen uses Lip Gloss styles—color, rounded borders, headings, and a key
+badge—to make that distinction visible. These are presentation choices; Wish's
+substantive capability is serving the application over SSH.
 
 This demonstration does not provide production authentication, account
 management, relay hosting, or collaboration. It is not a replacement for the

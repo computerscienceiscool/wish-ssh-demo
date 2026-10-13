@@ -15,8 +15,27 @@ import (
 )
 
 var (
-	titleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("62"))
-	keyStyle   = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("205"))
+	bannerStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("230")).
+			Background(lipgloss.Color("62")).
+			Padding(0, 2)
+	headingStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("86"))
+	panelStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("69")).
+			Padding(1, 2)
+	bulletStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("212"))
+	keyStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("230")).
+			Background(lipgloss.Color("205")).
+			Padding(0, 1)
+	quietStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("245"))
 )
 
 type model struct {
@@ -43,12 +62,32 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	return fmt.Sprintf(
-		"\n%s\n\nHello %s. You connected to an application, not a shell.\n\nWish provides:\n  • an SSH server embedded in the Go program\n  • a separate Bubble Tea application for each connection\n  • terminal-size events passed to the application\n\nPlain SSH gives you a remote command prompt. Wish gives the server control\nover the full terminal experience. It does not replace SSH routing, accounts,\nor access control.\n\n%s quits this session.\n",
-		titleStyle.Render("Wish SSH-hosted TUI demo"),
-		m.visitor,
-		keyStyle.Render("q"),
+	connection := fmt.Sprintf("Hello %s. You connected to an application, not a shell.", m.visitor)
+	capabilities := lipgloss.JoinVertical(
+		lipgloss.Left,
+		headingStyle.Render("WHAT WISH ADDS"),
+		"",
+		bulletStyle.Render("◆")+" An SSH server embedded in this Go program",
+		bulletStyle.Render("◆")+" A separate Bubble Tea app for each connection",
+		bulletStyle.Render("◆")+" Terminal-size events sent to the app",
 	)
+	meaning := lipgloss.JoinVertical(
+		lipgloss.Left,
+		headingStyle.Render("WHY THAT MATTERS"),
+		"",
+		"Plain SSH gives you a remote command prompt. Wish lets the server",
+		"own the whole terminal experience. It does not replace SSH routing,",
+		"accounts, access control, or a collaboration relay.",
+	)
+
+	return fmt.Sprintf(
+		"\n%s\n\n%s\n\n%s\n\n%s\n\n%s quits this session.\n",
+		bannerStyle.Render("  WISH  ·  SSH-HOSTED TERMINAL APP  "),
+		connection,
+		panelStyle.Render(capabilities),
+		panelStyle.Render(meaning),
+		keyStyle.Render("q"),
+	) + quietStyle.Render("  Local demonstration only · no Vesta or internet connection") + "\n"
 }
 
 func main() {
